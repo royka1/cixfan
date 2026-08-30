@@ -172,7 +172,7 @@ fan off with no thermal management at all.
 ## Installing
 
 ```sh
-sudo apt install ./cixfan-dkms_1.1-1_all.deb
+sudo apt install ./cixfan-dkms_1.1-2_all.deb
 ```
 
 It is a DKMS source package, so it rebuilds automatically on kernel upgrades.
@@ -262,7 +262,7 @@ response length did not match what the EC returned.
 ## Building the package
 
 ```sh
-./build-deb.sh          # produces ./cixfan-dkms_1.1-1_all.deb
+./build-deb.sh          # produces ./cixfan-dkms_1.1-2_all.deb
 ```
 
 Needs `dpkg-deb` and `fakeroot` only — no root, and no kernel build at

@@ -4,7 +4,7 @@ set -e
 
 NAME=cixfan
 VERSION=1.1
-DEBREV=1
+DEBREV=2
 PKG=${NAME}-dkms
 
 src=$(cd "$(dirname "$0")" && pwd)

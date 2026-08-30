@@ -1,3 +1,9 @@
+cixfan-dkms (1.1-2) unstable; urgency=medium
+
+  * Point the Homepage field at https://github.com/royka1/cixfan.
+
+ -- Roy Kaandorp <roykaandorp@gmail.com>  Sun, 30 Aug 2026 10:30:00 +0200
+
 cixfan-dkms (1.1-1) unstable; urgency=medium
 
   * Verify that the fan is really under our control, and hand it back to the

@@ -1,5 +1,5 @@
 Package: cixfan-dkms
-Version: 1.1-1
+Version: 1.1-2
 Section: kernel
 Priority: optional
 Architecture: all
