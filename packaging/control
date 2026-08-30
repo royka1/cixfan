@@ -1,0 +1,25 @@
+Package: cixfan-dkms
+Version: 1.1-1
+Section: kernel
+Priority: optional
+Architecture: all
+Maintainer: Roy Kaandorp <roykaandorp@gmail.com>
+Depends: dkms (>= 2.1.0.0)
+Recommends: linux-headers-edge-cix-p1 | linux-headers-generic | linux-headers
+Description: quiet fan control for CIX Sky1 boards booted with ACPI
+ On a CIX Sky1 board (Orange Pi 6 Plus / CIX Phecda) booted with ACPI rather
+ than a devicetree, the firmware exposes only three fan profiles through the
+ CIXHA024 ACPI device: automatic, mute and performance.  The automatic
+ profile idles the fan at 40 % duty, which is considerably louder than the
+ devicetree setup, where Linux drove the Chrome EC PWM itself from a pwm-fan
+ cooling device.
+ .
+ This DKMS module restores numeric fan control without taking the I2C
+ controller away from AML: it installs one small ACPI passthrough method over
+ the firmware's own serialized \_SB.EC0.TRAS transport, puts the embedded
+ controller into its undocumented manual fan profile, and then runs a quiet
+ temperature curve driven from the SoC thermal zones.
+ .
+ It exposes a cix_fan_quiet hwmon device with pwm1 and pwm1_enable, and hands
+ the fan back to the firmware's automatic profile on unload, reboot,
+ shutdown, suspend, repeated EC errors or an emergency temperature.

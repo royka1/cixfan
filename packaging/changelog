@@ -1,0 +1,34 @@
+cixfan-dkms (1.1-1) unstable; urgency=medium
+
+  * Verify that the fan is really under our control, and hand it back to the
+    firmware otherwise.  Fan profile byte 0 is undocumented, so on an EC
+    firmware that numbers its profiles differently the commands could be
+    accepted while the duty writes were ignored, leaving the driver running a
+    curve it was not actually driving.
+  * At probe, step the duty and read it back, refusing to bind if the EC does
+    not report what was asked for.  This proves the command path, but cannot
+    prove that profile 0 means manual: measured on this board, an EC left in
+    automatic mode held a manual duty write untouched for 45 seconds, and
+    re-sending a profile does not force a re-evaluation.
+  * So also check continuously, before each re-assert, and give the fan back
+    after three consecutive disagreements.  That is what catches an EC which
+    accepts control and then fights for it, since the difference is only
+    visible when the EC re-evaluates its own target.
+  * Add the skip_probe_check module parameter for an EC that accepts control
+    but cannot report its duty back.  It does not disable the runtime check.
+
+ -- Roy Kaandorp <roykaandorp@gmail.com>  Sun, 30 Aug 2026 10:05:00 +0200
+
+cixfan-dkms (1.0-1) unstable; urgency=medium
+
+  * Initial release.
+  * Restore numeric Chrome EC fan control under ACPI by installing an ACPI
+    passthrough method over the firmware's \_SB.EC0.TRAS transport.
+  * Select the EC's undocumented manual fan profile
+    (EC_CMD_THERMAL_AUTO_FAN_CTRL byte 0) so written duties are not
+    overwritten by the EC's own control loop.
+  * Drive a quiet curve off the SoC thermal zones, with handback to the
+    firmware profile on unload, reboot, shutdown, suspend, repeated EC
+    errors and an emergency temperature.
+
+ -- Roy Kaandorp <roykaandorp@gmail.com>  Sun, 30 Aug 2026 03:30:00 +0200

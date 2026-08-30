@@ -1,0 +1,16 @@
+# kernel module build output
+*.o
+*.ko
+*.mod
+*.mod.c
+*.mod.o
+*.order
+*.symvers
+.*.cmd
+.tmp_versions/
+
+# iasl intermediate; acpi/cix_ec_raw.hex is checked in on purpose
+*.aml
+
+# built packages go in releases, not in the tree
+*.deb

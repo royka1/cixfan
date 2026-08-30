@@ -1,0 +1,22 @@
+#!/bin/sh
+set -e
+
+NAME=cixfan
+VERSION=1.1
+
+case "$1" in
+remove|deconfigure)
+	# Unloading restores the firmware's automatic fan profile.
+	modprobe -r cixfan 2>/dev/null || true
+	if dkms status -m "$NAME" -v "$VERSION" 2>/dev/null | grep -q "$NAME"; then
+		dkms remove -m "$NAME" -v "$VERSION" --all || true
+	fi
+	;;
+upgrade)
+	if dkms status -m "$NAME" -v "$VERSION" 2>/dev/null | grep -q "$NAME"; then
+		dkms remove -m "$NAME" -v "$VERSION" --all || true
+	fi
+	;;
+esac
+
+exit 0

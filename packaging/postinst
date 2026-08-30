@@ -1,0 +1,44 @@
+#!/bin/sh
+set -e
+
+NAME=cixfan
+VERSION=1.1
+KVER=$(uname -r)
+
+warn() {
+	echo "cixfan-dkms: $*" >&2
+}
+
+case "$1" in
+configure)
+	dkms add -m "$NAME" -v "$VERSION" >/dev/null 2>&1 || true
+
+	# Build for the running kernel only.  This machine can carry several
+	# stale /lib/modules/*/build trees, and dkms' build-every-kernel pass
+	# aborts the whole postinst on the first unusable one.  Other kernels
+	# are picked up by dkms autoinstall when they are installed.
+	if [ ! -e "/lib/modules/$KVER/build/include" ]; then
+		warn "no usable headers for $KVER, skipping build."
+		warn "install the matching linux-headers package, then run:"
+		warn "  sudo dkms install -m $NAME -v $VERSION -k $KVER --force"
+		exit 0
+	fi
+
+	if ! dkms build -m "$NAME" -v "$VERSION" -k "$KVER"; then
+		warn "build failed for $KVER; see /var/lib/dkms/$NAME/$VERSION/build/make.log"
+		exit 0
+	fi
+	if ! dkms install -m "$NAME" -v "$VERSION" -k "$KVER" --force; then
+		warn "install failed for $KVER"
+		exit 0
+	fi
+
+	# Pick up the freshly built module without waiting for a reboot.
+	if [ -d /sys/devices/platform/CIXHA024:00 ]; then
+		modprobe -r cixfan 2>/dev/null || true
+		modprobe cixfan 2>/dev/null || warn "modprobe cixfan failed"
+	fi
+	;;
+esac
+
+exit 0
