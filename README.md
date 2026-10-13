@@ -1,17 +1,13 @@
 # cixfan — quiet fan control for CIX Sky1 boards booted with ACPI
 
-Restores devicetree-style numeric fan control on a CIX Sky1 board
-(Orange Pi 6 Plus / "CIX Phecda Board") running with ACPI instead of a
-devicetree, and drives it from a quiet temperature curve.
+Enables numeric fan control on a CIX Sky1 board
+(Orange Pi 6 Plus / "CIX Phecda Board") running with ACPI, and drives it from a quiet temperature curve.
 
 Tested on Armbian, kernel 7.1.8-edge-cix-p1, aarch64.
 
 ## The problem
 
-Under devicetree the fan was driven by Linux: a `pwm-fan` cooling device on
-top of `google,cros-ec-pwm`, with a `cooling-levels` curve in the DT.
-
-Under ACPI that path is gone. The firmware exposes only three fan profiles,
+Under ACPI the firmware exposes only three fan profiles,
 through the `CIXHA024` ACPI device:
 
 | ACPI method | via | effect |
